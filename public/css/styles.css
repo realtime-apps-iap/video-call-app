@@ -10,7 +10,7 @@
 }
 
 video {
-    height: 100vh;
+    height: 100%;
     width: 400px;
     object-fit: cover;
 }
