@@ -120,7 +120,7 @@ const setUnmuteButton = () => {
     document.querySelector(".mainMuteButton").innerHTML = html;
 };
 
-// ------------------------------
+// -----------------------------------------------------------
 // for the video play/stop button
 const playStop = () => {
     console.log("object");
@@ -148,4 +148,9 @@ const setPlayVideo = () => {
 	  <span>Play Video</span>
 	`;
     document.querySelector(".mainVideoButton").innerHTML = html;
+};
+
+// for the video end button -- close window
+const endMeeting = () => {
+    window.open("", "_self").close();
 };
