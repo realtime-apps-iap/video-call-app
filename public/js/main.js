@@ -1,26 +1,26 @@
 const socket = io("/");
+
 const videoGrid = document.getElementById("videoGrid");
 const myVideo = document.createElement("video");
 myVideo.muted = true;
 
-// peer.js script loaded on client side via cdn in room.ejs
-var peer = new Peer();
+var peer = new Peer(); // btw, peer.js script is loaded on client side via cdn in room.ejs
 
-// undefined - unique ID autocreated by peerjs library
 const myPeer = new Peer(undefined, {
+    // undefined - peerjs will generate a unique ID
     path: "/peerjs",
     host: "/",
     port: "443",
 });
 
-// peers object to store the calls - to conveniently .close() later on
-const peers = {};
+const peers = {}; // peers object to store the calls - to conveniently .close() later on
 
 let myVideoStream;
 
-// Access camera & microphones via browser
+// Start exchanging video & audio feed amongst clients
 navigator.mediaDevices
     .getUserMedia({
+        // prompts user for permission on the browser
         video: true,
         audio: true,
     })
@@ -34,12 +34,14 @@ navigator.mediaDevices
             console.log(`Someone joined the video call - User: ${userId}`);
         });
 
-        // When user calls
+        // When a client calls me
         peer.on("call", (call) => {
-            call.answer(stream);
+            call.answer(stream); // send my video stream to the client who called
             const video = document.createElement("video");
+
+            // Receive video stream from client
             call.on("stream", (userVideoStream) => {
-                addVideoStream(video, userVideoStream); // add video to my own client side website
+                addVideoStream(video, userVideoStream); // add video to appear on my browser
             });
         });
     });
@@ -56,7 +58,7 @@ peer.on("open", (id) => {
 
 // Function to connect to a new user
 const connectToNewUser = (userId, stream) => {
-    //Direct connection- Client A will connect to client B directly
+    // Direct P2P connection- Client A will connect to client B directly
     const call = peer.call(userId, stream);
     const video = document.createElement("video");
 
@@ -65,34 +67,29 @@ const connectToNewUser = (userId, stream) => {
         addVideoStream(video, userVideoStream);
     });
 
+    peers[userId] = call;
+
     // when call stops, remove video feed
     call.on("close", () => {
         video.remove();
     });
-
-    peers[userId] = call;
 };
 
-// Function to add to own feed
+// Function to add to my own feed
 const addVideoStream = (video, stream) => {
     video.srcObject = stream;
     video.addEventListener("loadedmetadata", () => {
-        // once stream is loaded fully, start showing and playing video
-        video.play();
+        video.play(); // once stream is loaded fully, start showing and playing video
     });
-    // add to website
+    // add video to client website
     videoGrid.append(video);
 };
 
-// ----------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // Optional additional functions
+// -----------------------------------------------------------------------------
 
-// Auto scroll to bottom of chat - disabled
-const scrollToBottom = () => {
-    var d = $(".mainChatWindow");
-    d.scrollTop(d.prop("scrollHeight"));
-};
-// --------------------------
+// ------------------------------------------------------
 // for the mute/unmute button
 const muteUnmute = () => {
     const enabled = myVideoStream.getAudioTracks()[0].enabled;
@@ -120,7 +117,7 @@ const setUnmuteButton = () => {
     document.querySelector(".mainMuteButton").innerHTML = html;
 };
 
-// -----------------------------------------------------------
+// ------------------------------------------------------
 // for the video play/stop button
 const playStop = () => {
     console.log("object");
@@ -150,6 +147,7 @@ const setPlayVideo = () => {
     document.querySelector(".mainVideoButton").innerHTML = html;
 };
 
+// ------------------------------------------------------
 // for the video end button -- close window
 const endMeeting = () => {
     window.open("", "_self").close();

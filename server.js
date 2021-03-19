@@ -17,15 +17,16 @@ app.get("/", (req, res) => {
 });
 
 app.get("/:roomID", (req, res) => {
-    res.render("room", { roomId: req.params.roomID });
+    res.render("room", { roomId: req.params.roomID }); // pass roomID variable to client site
 });
 
 io.on("connection", (socket) => {
-    // Listeining join-room
+    // Client socket connects with server
     socket.on("join-room", (roomId, userId) => {
         socket.join(roomId); // join room
         socket.to(roomId).broadcast.emit("user-connected", userId);
 
+        // Client socket disconnects
         socket.on("disconnect", () => {
             socket.to(roomId).broadcast.emit("user-disconnected", userId);
         });
