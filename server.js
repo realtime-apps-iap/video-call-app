@@ -1,23 +1,31 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 const { ExpressPeerServer } = require("peer");
+
+const { v4: uuidv4 } = require("uuid");
+
 const peerServer = ExpressPeerServer(server, {
     debug: true,
 });
-const { v4: uuidv4 } = require("uuid");
 
 app.use("/peerjs", peerServer); // Peer WebRTC server
-app.use(express.static("public"));
+
 app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, "/public")));
 
 app.get("/", (req, res) => {
     res.redirect(`/${uuidv4()}`); // e.g. 0a48077c-0878-4389-b7f6-cff074f658bb
 });
 
 app.get("/:roomID", (req, res) => {
-    res.render("room", { roomId: req.params.roomID });
+    res.render("room", {
+        roomId: req.params.roomID,
+        port: 5000,
+        host: process.env.host | "/",
+    });
 });
 
 io.on("connection", (socket) => {
@@ -33,6 +41,4 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-const HOST = "0.0.0.0";
-
-server.listen(PORT, HOST, () => console.log(`Listening on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

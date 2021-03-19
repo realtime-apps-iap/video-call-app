@@ -3,7 +3,7 @@ function showSnackbar() {
     sb.className = "show";
     setTimeout(function() {
         sb.className = sb.className.replace("show", "");
-    }, 3000);
+    }, 3500);
 }
 
 function copyLink() {
