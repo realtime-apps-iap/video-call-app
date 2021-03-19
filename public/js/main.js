@@ -31,7 +31,7 @@ navigator.mediaDevices
         // When a user has joined
         socket.on("user-connected", (userId) => {
             connectToNewUser(userId, stream);
-            alert(`Someone joined the video call - User: ${userId}`);
+            console.log(`Someone joined the video call - User: ${userId}`);
         });
 
         // When user calls
