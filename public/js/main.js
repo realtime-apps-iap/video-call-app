@@ -6,12 +6,12 @@ myVideo.muted = true;
 
 var peer = new Peer(); // btw, peer.js script is loaded on client side via cdn in room.ejs
 
-const myPeer = new Peer(undefined, {
-    // undefined - peerjs will generate a unique ID
-    path: "/peerjs",
-    host: "/",
-    port: "443",
-});
+// const peer = new Peer(undefined, {
+//     // undefined - peerjs will generate a unique ID
+//     path: "/peerjs",
+//     host: "/",
+//     port: "443",
+// });
 
 const peers = {}; // peers object to store the calls - to conveniently .close() later on
 
