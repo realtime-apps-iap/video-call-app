@@ -26,10 +26,11 @@ io.on("connection", (socket) => {
         socket.join(roomId); // join room
         socket.to(roomId).broadcast.emit("user-connected", userId);
 
-        // Client socket disconnects
-        socket.on("disconnect", () => {
-            socket.to(roomId).broadcast.emit("user-disconnected", userId);
-        });
+        // TODO5 - when User Disconnects
+        // // Client socket disconnects
+        // socket.on("disconnect", () => {
+        //     socket.to(roomId).broadcast.emit("user-disconnected", userId);
+        // });
     });
 });
 

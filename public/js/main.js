@@ -28,52 +28,57 @@ navigator.mediaDevices
         myVideoStream = stream;
         addVideoStream(myVideo, stream);
 
-        // When a user has joined
-        socket.on("user-connected", (userId) => {
-            connectToNewUser(userId, stream);
-            console.log(`Someone joined the video call - User: ${userId}`);
-        });
+        // TODO1 - Connect to the New User who has joined the room
+        // // When a user has joined
+        // socket.on("user-connected", (userId) => {
+        //     connectToNewUser(userId, stream);
+        //     console.log(`Someone joined the video call - User: ${userId}`);
+        // });
 
-        // When a client calls me
-        peer.on("call", (call) => {
-            call.answer(stream); // send my video stream to the client who called
-            const video = document.createElement("video");
+        // TODO3 - Receive 'call' from a client user
+        // // When a client calls me
+        // peer.on("call", (call) => {
+        //     call.answer(stream); // send my video stream to the client who called
+        //     const video = document.createElement("video");
 
-            // Receive video stream from client
-            call.on("stream", (userVideoStream) => {
-                addVideoStream(video, userVideoStream); // add video to appear on my browser
-            });
-        });
+        //     // Receive video stream from client
+        //     call.on("stream", (userVideoStream) => {
+        //         //TODO4 - AddVideoStream Function
+        //         // addVideoStream(video, userVideoStream); // add video to appear on my browser
+        //     });
+        // });
     });
 
-// When user disconnects
-socket.on("user-disconnected", (userId) => {
-    if (peers[userId]) peers[userId].close(); // stop call
-});
+// TODO6 - close call when user disconnects
+// // When user disconnects
+// socket.on("user-disconnected", (userId) => {
+//     if (peers[userId]) peers[userId].close(); // stop call
+// });
 
 // Once this peer is fully initialised, and able to return you ID
 peer.on("open", (id) => {
     socket.emit("join-room", ROOM_ID, id);
 });
 
-// Function to connect to a new user
-const connectToNewUser = (userId, stream) => {
-    // Direct P2P connection- Client A will connect to client B directly
-    const call = peer.call(userId, stream);
-    const video = document.createElement("video");
+// TODO2 - Connect to New User Function
+// // Function to connect to a new user
+// const connectToNewUser = (userId, stream) => {
+//     // Direct P2P connection- Client A will connect to client B directly
+//     const call = peer.call(userId, stream);
+//     const video = document.createElement("video");
 
-    // add to own video stream
-    call.on("stream", (userVideoStream) => {
-        addVideoStream(video, userVideoStream);
-    });
+//     // add to own video stream
+//     call.on("stream", (userVideoStream) => {
+//         addVideoStream(video, userVideoStream);
+//     });
 
-    peers[userId] = call;
+//     peers[userId] = call;
 
-    // when call stops, remove video feed
-    call.on("close", () => {
-        video.remove();
-    });
-};
+//     // when call stops, remove video feed
+//     call.on("close", () => {
+//         video.remove();
+//     });
+// };
 
 // Function to add to my own feed
 const addVideoStream = (video, stream) => {
