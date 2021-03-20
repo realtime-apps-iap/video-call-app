@@ -31,7 +31,8 @@ navigator.mediaDevices
         // TODO1 - Connect to the New User who has joined the room
         // // When a user has joined
         // socket.on("user-connected", (userId) => {
-        //     connectToNewUser(userId, stream);
+        //     // TODO2 - Connect to New User Function
+        //     // connectToNewUser(userId, stream);
         //     console.log(`Someone joined the video call - User: ${userId}`);
         // });
 
@@ -60,25 +61,24 @@ peer.on("open", (id) => {
     socket.emit("join-room", ROOM_ID, id);
 });
 
-// TODO2 - Connect to New User Function
-// // Function to connect to a new user
-// const connectToNewUser = (userId, stream) => {
-//     // Direct P2P connection- Client A will connect to client B directly
-//     const call = peer.call(userId, stream);
-//     const video = document.createElement("video");
+// Function to connect to a new user
+const connectToNewUser = (userId, stream) => {
+    // Direct P2P connection- Client A will connect to client B directly
+    const call = peer.call(userId, stream);
+    const video = document.createElement("video");
 
-//     // add to own video stream
-//     call.on("stream", (userVideoStream) => {
-//         addVideoStream(video, userVideoStream);
-//     });
+    // add to own video stream
+    call.on("stream", (userVideoStream) => {
+        // addVideoStream(video, userVideoStream);
+    });
 
-//     peers[userId] = call;
+    peers[userId] = call;
 
-//     // when call stops, remove video feed
-//     call.on("close", () => {
-//         video.remove();
-//     });
-// };
+    // when call stops, remove video feed
+    call.on("close", () => {
+        video.remove();
+    });
+};
 
 // Function to add to my own feed
 const addVideoStream = (video, stream) => {
